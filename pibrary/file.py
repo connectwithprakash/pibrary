@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sys
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import joblib
@@ -24,7 +25,7 @@ class File:
 
         """
         self._mode = "r"
-        self._path = path
+        self._path = Path(path)
         self._obj_file = None
 
     def read(self) -> File:
@@ -35,6 +36,11 @@ class File:
 
         """
         self._mode = "r"
+        # Check if file exists
+        if not self._path.exists():
+            logger.exception(f"File not found at {self._path}")
+            logger.critical("Terminating the process.")
+            sys.exit()
         return self
 
     def write(self, obj_file: Any) -> File:
@@ -49,6 +55,10 @@ class File:
         """
         self._mode = "w"
         self._obj_file = obj_file
+        # Create parent directory if not exists for writing
+        if not self._path.parent.exists():
+            self._path.parent.mkdir(parents=True, exist_ok=True)
+            logger.success(f"Created directory at {self._path.parent}.")
         return self
 
     def json(self, **kwargs) -> Optional[Dict[str, List[str]]]:
@@ -140,8 +150,9 @@ class File:
             elif self._mode == "r":
                 cuda_device_num = kwargs.get("cuda_device_num")
                 device = torch.device(
-                    f"cuda:{cuda_device_num}" if torch.cuda.is_available(
-                    ) and cuda_device_num is not None else "cpu"
+                    f"cuda:{cuda_device_num}"
+                    if torch.cuda.is_available() and cuda_device_num is not None
+                    else "cpu"
                 )
                 self._obj_file = torch.load(self._path, map_location=device)
                 logger.success(f"File read from {self._path}")
