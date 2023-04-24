@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sys
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import joblib
@@ -24,7 +25,7 @@ class File:
 
         """
         self._mode = "r"
-        self._path = path
+        self._path = Path(path)
         self._obj_file = None
 
     def read(self) -> File:
@@ -35,6 +36,11 @@ class File:
 
         """
         self._mode = "r"
+        # Check if file exists
+        if not self._path.exists():
+            logger.exception(f"File not found at {self._path}")
+            logger.critical("Terminating the process.")
+            sys.exit()
         return self
 
     def write(self, obj_file: Any) -> File:
