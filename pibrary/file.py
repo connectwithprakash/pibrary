@@ -7,7 +7,7 @@ from typing import Any, Dict, List, Optional
 
 import joblib
 import pandas as pd
-import torch
+
 from loguru import logger
 
 
@@ -123,38 +123,6 @@ class File:
                 logger.success(f"File written at {self._path}")
             elif self._mode == "r":
                 self._obj_file = pd.read_csv(self._path, **kwargs)
-                logger.success(f"File read from {self._path}")
-                return self._obj_file
-        except:
-            if self._mode == "w":
-                logger.exception(f"Cannot write file at {self._path}")
-            else:
-                logger.exception(f"Cannot read file from {self._path}")
-            logger.critical("Terminating the process.")
-            sys.exit()
-
-    def torch(self, **kwargs):
-        """
-        Reads or writes torch file according to mode set by read/write method.
-
-        Args:
-            **kwargs: Keyword arguments for file read/write. Eg: cuda_device_num = 0 to read of cuda:0.
-
-        Returns: torch object if read mode else nothing is returned.
-
-        """
-        try:
-            if (self._mode == "w") and (self._obj_file is not None):
-                torch.save(self._obj_file, self._path)
-                logger.success(f"File written at {self._path}")
-            elif self._mode == "r":
-                cuda_device_num = kwargs.get("cuda_device_num")
-                device = torch.device(
-                    f"cuda:{cuda_device_num}"
-                    if torch.cuda.is_available() and cuda_device_num is not None
-                    else "cpu"
-                )
-                self._obj_file = torch.load(self._path, map_location=device)
                 logger.success(f"File read from {self._path}")
                 return self._obj_file
         except:
