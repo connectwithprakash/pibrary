@@ -48,3 +48,10 @@ def some_function(...):
 # String Class
 new_text = String(text).lower().remove_digits().remove_punctuation().strip()
 ```
+
+## Contributing
+Contributions are welcome! Please read [CONTRIBUTING](CONTRIBUTING) for details on how to contribute to this project.
+
+
+# License
+This project is licensed under the terms of the [MIT license](LICENSE).
