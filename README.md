@@ -7,6 +7,9 @@
     <a href="https://github.com/connectwithprakash/pibrary/actions?query=workflow%3ATest+event%3Apush+branch%3Amain" target="_blank">
         <img src="https://github.com/connectwithprakash/pibrary/workflows/Test/badge.svg?event=push&branch=main" alt="Test">
     </a>
+    <a href='https://pibrary.readthedocs.io/en/latest/?badge=latest'>
+        <img src='https://readthedocs.org/projects/pibrary/badge/?version=latest' alt='Documentation Status' />
+    </a>
     <a href="https://pypi.org/project/pibrary" target="_blank">
         <img src="https://img.shields.io/pypi/v/pibrary?color=%2334D058&label=pypi%20package" alt="Package version">
     </a>
@@ -48,6 +51,10 @@ def some_function(...):
 # String Class
 new_text = String(text).lower().remove_digits().remove_punctuation().strip()
 ```
+
+## Documentation
+
+The full documentation for Pibrary is available at https://pibrary.readthedocs.io/en/latest/.
 
 ## Contributing
 Contributions are welcome! Please read [CONTRIBUTING](CONTRIBUTING) for details on how to contribute to this project.
