@@ -52,6 +52,10 @@ def some_function(...):
 new_text = String(text).lower().remove_digits().remove_punctuation().strip()
 ```
 
+## Documentation
+
+The full documentation for Pibrary is available at https://pibrary.readthedocs.io/en/latest/.
+
 ## Contributing
 Contributions are welcome! Please read [CONTRIBUTING](CONTRIBUTING) for details on how to contribute to this project.
 
