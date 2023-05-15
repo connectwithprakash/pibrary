@@ -17,3 +17,34 @@
         <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT">
     </a>
 </p>
+
+## Installation
+
+```bash
+pip install pibrary
+```
+
+## Usage
+```python
+from pibrary.file import File
+from pibrary.logger import timeit
+from pibrary.string import String
+
+# File Class
+dataframe = File(file_path).read().csv()
+File(file_path).write(dataframe).csv()
+
+json_data = File(file_path).read().json()
+File(file_path).write(json_data).csv()
+
+pickle_data = File(file_path).read().pickle()
+File(file_path).write(pickle_data).csv()
+
+# Logger
+@timeit
+def some_function(...):
+    ...
+
+# String Class
+new_text = String(text).lower().remove_digits().remove_punctuation().strip()
+```
