@@ -1,41 +1,38 @@
-name: Publish
+name: Publish Package
 
 on:
-  release:
+  pull_request:
+    branches:
+      - main
     types:
-      - created
+      - closed
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
+      fail-fast: false
+
     steps:
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v3
         with:
-          python-version: "3.7"
-          # Issue ref: https://github.com/actions/setup-python/issues/436
-          # cache: "pip"
-          cache-dependency-path: pyproject.toml
-      - uses: actions/cache@v3
-        id: cache
-        with:
-          path: ${{ env.pythonLocation }}
-          key: ${{ runner.os }}-python-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml') }}-publish
-      - name: Install build dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: pip install build
-      - name: Build distribution
-        run: python -m build
-      - name: Publish
-        uses: pypa/gh-action-pypi-publish@v1.8.5
-        with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
-      - name: Dump GitHub context
+          python-version: ${{ matrix.python-version }}  # Specify the Python version you want to use
+
+      - name: Install Poetry
+        run: |
+          pip install poetry
+          poetry config virtualenvs.create false
+
+      - name: Build and Publish Package
         env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
+          PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        run: |
+          poetry build
+          poetry publish --username $PYPI_USERNAME --password $PYPI_PASSWORD
