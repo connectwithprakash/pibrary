@@ -1,7 +1,7 @@
 # Pibrary
 
 <p align="center">
-    <em>Pibrary framework: A package for reusable code for ML projects</em>
+    <em>Pibrary framework: A package of reusable code for ML projects</em>
 </p>
 <p align="center">
     <a href="https://github.com/connectwithprakash/pibrary/actions?query=workflow%3ATest+event%3Apush+branch%3Amain" target="_blank">
