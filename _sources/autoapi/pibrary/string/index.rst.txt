@@ -1,0 +1,67 @@
+:py:mod:`pibrary.string`
+========================
+
+.. py:module:: pibrary.string
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   pibrary.string.String
+
+
+
+
+.. py:class:: String(seq)
+
+
+   Bases: :py:obj:`collections.UserString`
+
+   This class is used to preprocess a text.
+
+   .. py:property:: str
+      :type: str
+
+      Property to get the string of the text.
+
+      :returns: String of the text.
+      :rtype: str
+
+   .. py:method:: remove_punctuation_except_period() -> collections.UserString
+
+      Remove punctuation except period from a text.
+
+      :returns: Text without punctuation except period.
+      :rtype: UserString
+
+
+   .. py:method:: remove_punctuation() -> collections.UserString
+
+      Remove punctuation from a text.
+
+      :returns: Text without punctuation.
+      :rtype: UserString
+
+
+   .. py:method:: remove_digits() -> collections.UserString
+
+      This function is used to remove digits from a text.
+
+      :returns: Text without digits.
+      :rtype: UserString
+
+
+   .. py:method:: remove_duplicate_spaces() -> collections.UserString
+
+      Remove duplicate spaces from a text.
+
+      :returns: Text without duplicate spaces.
+      :rtype: UserString
+
+
+

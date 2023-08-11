@@ -1,0 +1,29 @@
+:py:mod:`pibrary.logger`
+========================
+
+.. py:module:: pibrary.logger
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pibrary.logger.timeit
+
+
+
+.. py:function:: timeit(function: object) -> callable
+
+   Calculates the time taken by the function to run.
+
+   :param function: Object of the function whose running time is to calculated.
+
+   Returns: Any object.
+
+
+

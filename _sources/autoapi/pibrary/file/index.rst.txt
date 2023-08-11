@@ -1,0 +1,69 @@
+:py:mod:`pibrary.file`
+======================
+
+.. py:module:: pibrary.file
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   pibrary.file.File
+
+
+
+
+.. py:class:: File(path: str, *args, **kwargs)
+
+
+   Class to read and write files.
+
+   .. py:method:: read() -> File
+
+      Sets the io mode to read, and path variable to read from.
+
+      Returns: Class object to chain with other methods.
+
+
+
+   .. py:method:: write(obj_file: Any) -> File
+
+      Sets the io mode to write, and path variable to write to.
+
+      :param obj_file: Object to save like dict for j
+
+      Returns: Class object to chain with other methods.
+
+
+
+   .. py:method:: json(**kwargs) -> Optional[Dict[str, List[str]]]
+
+      Reads or writes json file according to mode set by read/write method.
+
+      :param \*\*kwargs: Keyword arguments for diff read/write like. Eg:nt=4 for json read.
+
+      Returns: obj_file if read mode else nothing is returned.
+
+
+
+   .. py:method:: pickle()
+
+      Reads or writes pickle file according to mode set by read/write method.
+
+      Returns: obj_file if read mode else nothing is returned.
+
+
+
+   .. py:method:: csv(**kwargs) -> Optional[pandas.DataFrame]
+
+      Reads or writes csv file according to mode set by read/write method.
+
+      Returns: Dataframe if read mode else nothing is returned.
+
+
+
+
