@@ -25,10 +25,32 @@ release = '0.2.0-alpha.1'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.viewcode',
-    'sphinx.ext.napoleon'
+    "sphinx.ext.autodoc",
+    "sphinx.ext.coverage",
+    "sphinx.ext.doctest",
+    "sphinx.ext.githubpages",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.todo",
+    "sphinx.ext.viewcode",
+    "autoapi.extension",
 ]
+
+# AutoAPI configuration
+autoapi_type = 'python'
+autoapi_dirs = ['../pibrary']
+
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3/', None),
+    'sphinx': ('https://www.sphinx-doc.org/en/master/', None),
+}
+intersphinx_disabled_domains = ['std']
+
+html_context = {
+    "display_github": True,  # Integrate GitHub
+    "github_repo": "NASA-IMPACT/ml_spectroscopy/",  # Repo name
+    "github_version": "main",  # Version
+    "conf_py_path": "docs/",  # Path in the checkout to the docs root
+}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
