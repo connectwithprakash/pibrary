@@ -13,5 +13,6 @@ Submodules
    file/index.rst
    logger/index.rst
    string/index.rst
+   visualization/index.rst
 
 

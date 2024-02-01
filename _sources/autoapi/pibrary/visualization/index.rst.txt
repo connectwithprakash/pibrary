@@ -1,0 +1,33 @@
+:py:mod:`pibrary.visualization`
+===============================
+
+.. py:module:: pibrary.visualization
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   pibrary.visualization.plot_images
+
+
+
+.. py:function:: plot_images(images: List[Union[str, numpy.ndarray]], title: Optional[str] = '', figsize: tuple = (20, 20)) -> None
+
+   Plot a grid of images.
+
+   :param images: List of image paths or NumPy arrays.
+   :type images: List[Union[str, np.ndarray]]
+   :param title: Title for the entire plot (default is an empty string).
+   :type title: Optional[str]
+   :param figsize: Size of the figure (default is (20, 20)).
+   :type figsize: tuple
+
+   :returns: None
+
+
