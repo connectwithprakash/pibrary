@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="example-pkg-YOUR-USERNAME-HERE", # Replace with your own username
+    name="pibrary",  # Replace with your own username
     version="0.1.0-aplha.1",
     author="Prakash Chaudhary",
     author_email="connectwithprakash@gmail.com",
