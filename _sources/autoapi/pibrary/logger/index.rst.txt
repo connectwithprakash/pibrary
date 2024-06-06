@@ -1,21 +1,19 @@
-:py:mod:`pibrary.logger`
-========================
+pibrary.logger
+==============
 
 .. py:module:: pibrary.logger
 
 
-Module Contents
----------------
-
-
 Functions
-~~~~~~~~~
+---------
 
 .. autoapisummary::
 
    pibrary.logger.timeit
 
 
+Module Contents
+---------------
 
 .. py:function:: timeit(function: object) -> callable
 

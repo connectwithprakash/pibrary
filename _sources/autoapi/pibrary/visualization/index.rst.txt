@@ -1,21 +1,19 @@
-:py:mod:`pibrary.visualization`
-===============================
+pibrary.visualization
+=====================
 
 .. py:module:: pibrary.visualization
 
 
-Module Contents
----------------
-
-
 Functions
-~~~~~~~~~
+---------
 
 .. autoapisummary::
 
    pibrary.visualization.plot_images
 
 
+Module Contents
+---------------
 
 .. py:function:: plot_images(images: List[Union[str, numpy.ndarray]], title: Optional[str] = '', figsize: tuple = (20, 20)) -> None
 

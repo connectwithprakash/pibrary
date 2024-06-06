@@ -1,32 +1,31 @@
-:py:mod:`pibrary.file`
-======================
+pibrary.file
+============
 
 .. py:module:: pibrary.file
 
 
-Module Contents
----------------
-
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
    pibrary.file.File
 
 
-
+Module Contents
+---------------
 
 .. py:class:: File(path: str, *args, **kwargs)
 
-
    Class to read and write files.
+
 
    .. py:method:: read() -> File
 
       Sets the io mode to read, and path variable to read from.
 
       Returns: Class object to chain with other methods.
+
 
 
 
@@ -40,6 +39,7 @@ Classes
 
 
 
+
    .. py:method:: json(**kwargs) -> Optional[Dict[str, List[str]]]
 
       Reads or writes json file according to mode set by read/write method.
@@ -50,11 +50,13 @@ Classes
 
 
 
+
    .. py:method:: pickle()
 
       Reads or writes pickle file according to mode set by read/write method.
 
       Returns: obj_file if read mode else nothing is returned.
+
 
 
 

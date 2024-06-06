@@ -1,19 +1,19 @@
-:py:mod:`pibrary`
-=================
+pibrary
+=======
 
 .. py:module:: pibrary
 
 
 Submodules
 ----------
+
 .. toctree::
-   :titlesonly:
    :maxdepth: 1
 
-   file/index.rst
-   logger/index.rst
-   string/index.rst
-   visualization/index.rst
-   wandb/index.rst
+   /autoapi/pibrary/file/index
+   /autoapi/pibrary/logger/index
+   /autoapi/pibrary/string/index
+   /autoapi/pibrary/visualization/index
+   /autoapi/pibrary/wandb/index
 
 

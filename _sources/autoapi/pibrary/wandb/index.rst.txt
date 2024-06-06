@@ -1,35 +1,29 @@
-:py:mod:`pibrary.wandb`
-=======================
+pibrary.wandb
+=============
 
 .. py:module:: pibrary.wandb
 
 
-Module Contents
----------------
-
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   pibrary.wandb.WandB
-
-
-
-
 Attributes
-~~~~~~~~~~
+----------
 
 .. autoapisummary::
 
    pibrary.wandb.run
 
 
+Classes
+-------
+
+.. autoapisummary::
+
+   pibrary.wandb.WandB
+
+
+Module Contents
+---------------
+
 .. py:class:: WandB
 
-
-
 .. py:data:: run
-
-   
 
