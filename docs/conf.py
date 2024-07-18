@@ -34,7 +34,6 @@ extensions = [
     "sphinx.ext.todo",
     "sphinx.ext.viewcode",
     "autoapi.extension",
-    "sphinx_autoapi.extension",
 ]
 
 # AutoAPI configuration
