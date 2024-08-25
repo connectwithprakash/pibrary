@@ -20,6 +20,19 @@ Module Contents
    Class to read and write files.
 
 
+   .. py:attribute:: _mode
+      :value: 'r'
+
+
+
+   .. py:attribute:: _path
+
+
+   .. py:attribute:: _obj_file
+      :value: None
+
+
+
    .. py:method:: read() -> File
 
       Sets the io mode to read, and path variable to read from.
