@@ -7,7 +7,7 @@ license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.9"
+python = ">=3.10"
 loguru = "^0.7.0"
 joblib = "^1.2.0"
 wandb = "^0.16.3"
