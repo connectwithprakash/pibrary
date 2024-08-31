@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.abspath(".."))
 project = "Pibrary"
 copyright = "2023, Prakash Chaudhary"
 author = "Prakash Chaudhary"
-release = "0.2.0-alpha.6"
+release = "0.3.0"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

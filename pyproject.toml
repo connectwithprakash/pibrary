@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pibrary"
-version = "0.2.0-alpha.6"
+version = "0.3.0"
 description = "A package of reusable code for ML projects."
 authors = ["Prakash Chaudhary <connectwithprakash@gmail.com>"]
 license = "MIT"
