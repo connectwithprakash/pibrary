@@ -27,10 +27,17 @@
 pip install pibrary
 ```
 
+## Features
+- File Class: Read and write files in csv, json, and pickle formats.
+- String Class: String manipulation functions.
+- LoguruPro Class: Loguru logger with additional features.
+    - Timeit Decorator: Decorator to measure the execution time of a function.
+    - Log Table Method: Print a table in the log.
+
 ## Usage
 ```python
 from pibrary.file import File
-from pibrary.logger import timeit
+from pibrary.loguru import logger
 from pibrary.string import String
 
 # File Class
@@ -44,7 +51,7 @@ pickle_data = File(file_path).read().pickle()
 File(file_path).write(pickle_data).csv()
 
 # Logger
-@timeit
+@logger.timeit
 def some_function(...):
     ...
 
