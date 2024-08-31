@@ -1,0 +1,71 @@
+pibrary.loguru
+==============
+
+.. py:module:: pibrary.loguru
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   pibrary.loguru.logger
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pibrary.loguru.LoguruPro
+
+
+Module Contents
+---------------
+
+.. py:class:: LoguruPro
+
+   .. py:attribute:: _logger
+
+
+   .. py:method:: _setup_custom_levels() -> None
+
+      Set up custom log levels.
+
+
+
+   .. py:method:: __getattr__(name: str) -> Callable
+
+      Delegate attribute access to the wrapped Loguru logger object.
+      Allows access to all Loguru logger methods.
+
+      :param name: The attribute or method name.
+
+      :returns: The attribute or method from the Loguru logger.
+
+
+
+   .. py:method:: timeit(function: Callable) -> Callable
+
+      Decorator to measure and log the execution time of a function.
+
+      :param function: The function to time.
+
+      :returns: The wrapper function that logs execution time.
+
+
+
+   .. py:method:: log_table(data: List[List[str]], headers: List[str] = None, alignments: List[str] = None, row_separator: str = '-+-', column_separator: str = ' | ') -> None
+
+      Logs a given list of data as a formatted table.
+
+      :param data: List of rows, where each row is a list of values.
+      :param headers: Optional headers for the table columns.
+      :param alignments: Optional list of alignments for each column ("left", "center", "right").
+      :param row_separator: Custom separator string for rows.
+      :param column_separator: Custom separator string for columns.
+
+
+
+.. py:data:: logger
+

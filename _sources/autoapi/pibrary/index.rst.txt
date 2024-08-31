@@ -12,6 +12,7 @@ Submodules
 
    /autoapi/pibrary/file/index
    /autoapi/pibrary/logger/index
+   /autoapi/pibrary/loguru/index
    /autoapi/pibrary/string/index
    /autoapi/pibrary/visualization/index
    /autoapi/pibrary/wandb/index

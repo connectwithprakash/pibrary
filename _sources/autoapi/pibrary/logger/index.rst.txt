@@ -4,24 +4,19 @@ pibrary.logger
 .. py:module:: pibrary.logger
 
 
-Functions
----------
+Attributes
+----------
 
 .. autoapisummary::
 
+   pibrary.logger.logger
    pibrary.logger.timeit
 
 
 Module Contents
 ---------------
 
-.. py:function:: timeit(function: object) -> callable
+.. py:data:: logger
 
-   Calculates the time taken by the function to run.
-
-   :param function: Object of the function whose running time is to calculated.
-
-   Returns: Any object.
-
-
+.. py:data:: timeit
 
