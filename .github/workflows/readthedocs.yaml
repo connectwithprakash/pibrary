@@ -1,12 +1,12 @@
+# .github/workflows/documentation-links.yml
+
 name: Publish Documentation
 on:
-  push:
-    branches:
-      - main
   pull_request_target:
     types:
       - opened
-    # Uncomment if you want to trigger on changes to documentation files.
+    # Execute this action only on PRs that touch
+    # documentation files.
     # paths:
     #   - "docs/**"
 
@@ -19,4 +19,4 @@ jobs:
     steps:
       - uses: readthedocs/actions/preview@v1
         with:
-          project-slug: "pibrary"
+          project-slug: "readthedocs-preview"
