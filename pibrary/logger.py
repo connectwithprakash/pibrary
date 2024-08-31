@@ -1,33 +1,15 @@
-from time import time
-from typing import Any, Dict, Tuple
+import warnings
+from .loguru import logger as loguru_pro
 
-from loguru import logger
+# Optional: Warn users about the new module
+warnings.warn(
+    "The 'logger.py' module is deprecated and will be removed in a future version. Please update your imports to use 'loguru.py'.",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
+# Keep using the LoguruPro from loguru.py
+logger = loguru_pro
 
-logger.level("Time", no=42, icon="⌛", color="<magenta>")
-
-
-def timeit(function: object) -> callable:
-    """
-    Calculates the time taken by the function to run.
-
-    Args:
-        function: Object of the function whose running time is to calculated.
-
-    Returns: Any object.
-
-    """
-
-    # Defined a wrapper function which acts as the dummy function when the actual function is called.
-    def wrapper(*args: Tuple[Any], **kwargs: Dict[str, Any]) -> Any:
-        logger.info(f"Entering function {function.__name__}.")
-        tic = time()
-        results = function(*args, **kwargs)
-        toc = time()
-        elapsed_time = toc - tic
-        logger.log(
-            "Time", f"Function {function.__name__} ran for {elapsed_time} seconds.")
-        logger.info(f"Exiting function {function.__name__}")
-        return results
-
-    return wrapper
+# If users directly used `timeit`, maintain that interface
+timeit = logger.timeit
