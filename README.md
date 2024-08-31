@@ -55,6 +55,15 @@ File(file_path).write(pickle_data).csv()
 def some_function(...):
     ...
 
+data = [
+    ["Item 1", "Value 1", "Description 1", "Extra 1"],
+    ["Item 2", "Value 2", "Description 2", "Extra 2"],
+    ["Item 3", "Value 3", "Description 3", "Extra 3"],
+    ["Item 4", "Value 4", "Description 4", "Extra 4"],
+]
+# Log the timing data as a table
+logger.log_table(data)
+
 # String Class
 new_text = String(text).lower().remove_digits().remove_punctuation().strip()
 ```
