@@ -1,153 +1,158 @@
+import inspect
+import sys
+
 from time import time
-from typing import Any, Callable, Dict, List, Tuple, Optional
+from typing import Any, Callable, Dict, List, Optional, Tuple
+from functools import wraps
 from loguru import logger as loguru_logger
 
 
+class TimerContextManager:
+    """
+    Context manager to measure and log the execution time of code blocks.
+
+    Attributes:
+        logger (loguru_logger): Instance of the Loguru logger for logging.
+        start_time (float): The time when the context was entered.
+    """
+
+    def __init__(self, logger: loguru_logger) -> None:
+        """
+        Initializes the TimerContextManager with a Loguru logger.
+
+        Args:
+            logger (loguru_logger): The logger instance used for logging execution time.
+        """
+        self.logger = logger
+
+    def __enter__(self) -> "TimerContextManager":
+        """Record the start time when entering the context."""
+        self.start_time = time()
+        return self
+
+    def __exit__(self, exc_type: Optional[type], exc_val: Optional[BaseException], exc_tb: Optional[Any]) -> None:
+        """Log the elapsed time when exiting the context."""
+        elapsed_time = time() - self.start_time
+        self.logger.opt(depth=1).log("TIME", f"Code block ran in {elapsed_time:.4f} seconds.")
+
+
 class LoguruPro:
-    def __init__(self):
-        self._logger = loguru_logger
+    """
+    Enhanced wrapper for Loguru logger with additional features.
+
+    Methods:
+        time(message: str): Log a message at the custom TIME level.
+        data(message: str): Log a message at the custom DATA level.
+        timeit(function: Optional[Callable] = None): Decorator or context manager for measuring execution time.
+        log_table(data: List[List[str]], headers: Optional[List[str]] = None, ...): Log tabular data as a table.
+    """
+
+    def __init__(self) -> None:
+        """Initialize LoguruPro with custom log levels."""
+        self.logger = loguru_logger
         self._setup_custom_levels()
 
     def _setup_custom_levels(self) -> None:
-        """
-        Set up custom log levels.
-        """
-        # Custom log levels
-        self._logger.level("TIME", no=15, icon="⌛", color="<magenta>")
-        self._logger.level("DATA", no=100, icon="📦", color="<cyan>")
+        """Define custom log levels for TIME and DATA."""
+        self.logger.level("TIME", no=15, icon="⏱️", color="<bold><magenta>")
+        self.logger.level("DATA", no=100, icon="📊", color="<bold><cyan>")
 
     def __getattr__(self, name: str) -> Callable:
         """
         Delegate attribute access to the wrapped Loguru logger object.
-        Allows access to all Loguru logger methods.
 
         Args:
-            name: The attribute or method name.
+            name (str): The attribute or method name to access.
 
         Returns:
-            The attribute or method from the Loguru logger.
+            Callable: The corresponding attribute or method from the Loguru logger.
         """
-        return getattr(self._logger, name)
+        return getattr(self.logger, name)
 
     def time(self, message: str) -> None:
         """
         Log a message at the custom TIME level.
 
         Args:
-            message: The message to log.
+            message (str): The message to log.
         """
-        self._logger.log("TIME", message)
+        # frame = inspect.currentframe().f_back
+        self.logger.opt(depth=1).log("TIME", message)
 
     def data(self, message: str) -> None:
         """
         Log a message at the custom DATA level.
 
         Args:
-            message: The message to log.
+            message (str): The message to log.
         """
-        self._logger.log("DATA", message)
+        self.logger.opt(depth=1).log("DATA", message)
 
-    def timeit(self, function: Optional[Callable] = None):
+    def timeit(self, function: Optional[Callable] = None) -> Callable:
         """
-        Decorator or context manager to measure and log the execution time of a function or code block.
+        Decorator or context manager for logging execution time.
 
         Args:
-            function: The function to time (if used as a decorator).
+            function (Optional[Callable]): The function to time if used as a decorator.
 
         Returns:
-            The wrapper function that logs execution time (if used as a decorator),
-            or the context manager (if used with a with statement).
+            Callable: The wrapped function with timing or a context manager.
         """
-        if function is not None:
-            # Used as a decorator
-            def wrapper(*args: Tuple[Any], **kwargs: Dict[str, Any]) -> Any:
-                self._logger.trace(f"Entering function {function.__name__}.")
+        if function:
+
+            @wraps(function)
+            def wrapper(*args: Any, **kwargs: Any) -> Any:
+                self.logger.trace(f"Entering {function.__name__}.")
                 start_time = time()
                 result = function(*args, **kwargs)
-                end_time = time()
-                elapsed_time = end_time - start_time
-                self._logger.log("TIME", f"Function {function.__name__} ran for {elapsed_time:.4f} seconds.")
-                self._logger.trace(f"Exiting function {function.__name__}.")
+                elapsed_time = time() - start_time
+                self.logger.opt(depth=1).log("TIME", f"{function.__name__} ran in {elapsed_time:.4f} seconds.")
+                self.logger.trace(f"Exiting {function.__name__}.")
                 return result
 
             return wrapper
-        else:
-            # Used as a context manager
-            class TimerContextManager:
-                def __init__(self, logger_instance):
-                    self.logger_instance = logger_instance
 
-                def __enter__(self):
-                    self.start_time = time()
-                    return self
-
-                def __exit__(self, exc_type, exc_val, exc_tb):
-                    end_time = time()
-                    elapsed_time = end_time - self.start_time
-                    self.logger_instance.log("TIME", f"Code block ran for {elapsed_time:.4f} seconds.")
-
-            return TimerContextManager(self)
+        return TimerContextManager(self.logger)
 
     def log_table(
         self,
         data: List[List[str]],
-        headers: List[str] = None,
-        alignments: List[str] = None,
+        headers: Optional[List[str]] = None,
+        alignments: Optional[List[str]] = None,
         row_separator: str = "-+-",
         column_separator: str = " | ",
     ) -> None:
         """
-        Logs a given list of data as a formatted table.
+        Log a list of data as a formatted table.
 
         Args:
-            data: List of rows, where each row is a list of values.
-            headers: Optional headers for the table columns.
-            alignments: Optional list of alignments for each column ("left", "center", "right").
-            row_separator: Custom separator string for rows.
-            column_separator: Custom separator string for columns.
+            data (List[List[str]]): The rows of the table, where each row is a list of string values.
+            headers (Optional[List[str]]): The headers for the table columns.
+            alignments (Optional[List[str]]): Alignment for each column ("left", "center", "right").
+            row_separator (str): The string used to separate rows. Default is '-+-'.
+            column_separator (str): The string used to separate columns. Default is ' | '.
         """
-        # If headers are not provided, create default headers
         num_columns = max(len(row) for row in data)
-        headers = headers or [f"Column {i+1}" for i in range(num_columns)]
+        headers = headers or [f"Column {i + 1}" for i in range(num_columns)]
+        alignments = (alignments or ["left"] * num_columns)[:num_columns]
 
-        # Ensure the headers match the number of columns
-        if len(headers) < num_columns:
-            headers.extend([f"Column {i+1}" for i in range(len(headers), num_columns)])
-
-        # Ensure alignments match the number of columns, or default to 'left'
-        if alignments is None:
-            alignments = ["left"] * num_columns
-        else:
-            alignments = (alignments + ["left"] * num_columns)[:num_columns]
-
-        # Calculate column widths based on the maximum length of data in each column
+        # Calculate the maximum width for each column
         col_widths = [max(len(str(item)) for item in col) for col in zip(headers, *data)]
 
-        def format_cell(value: str, width: int, alignment: str) -> str:
-            if alignment == "left":
-                return f"{value:<{width}}"
-            elif alignment == "center":
-                return f"{value:^{width}}"
-            elif alignment == "right":
-                return f"{value:>{width}}"
-            return value
+        def format_cell(value: str, width: int, align: str) -> str:
+            """Format a cell based on the specified alignment."""
+            align_map = {"left": "<", "center": "^", "right": ">"}
+            return f"{value:{align_map.get(align, '<')}{width}}"
 
-        def format_row(row: List[str], is_header: bool = False) -> str:
-            return column_separator.join(
-                format_cell(str(item), col_widths[i], alignments[i]) for i, item in enumerate(row)
-            )
+        def format_row(row: List[str]) -> str:
+            """Format a row with the specified column separator."""
+            return column_separator.join(format_cell(item, col_widths[i], alignments[i]) for i, item in enumerate(row))
 
         separator_row = row_separator.join("-" * width for width in col_widths)
+        table = "\n".join([format_row(headers), separator_row] + [format_row(row) for row in data])
 
-        table = "\n".join(
-            [
-                format_row(headers, is_header=True),
-                separator_row,
-                "\n".join(format_row(row) for row in data),
-            ]
-        )
-
-        self._logger.log("DATA", f"Table of Results:\n{table}")
+        self.logger.log("DATA", f"Table of Results:\n{table}")
 
 
+# Instantiate the logger
 logger = LoguruPro()
