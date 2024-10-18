@@ -13,7 +13,7 @@ class LoguruPro:
         Set up custom log levels.
         """
         # Custom log levels
-        self._logger.level("TIME", no=8, icon="⌛", color="<magenta>")
+        self._logger.level("TIME", no=15, icon="⌛", color="<magenta>")
         self._logger.level("DATA", no=100, icon="📦", color="<cyan>")
 
     def __getattr__(self, name: str) -> Callable:
@@ -29,28 +29,64 @@ class LoguruPro:
         """
         return getattr(self._logger, name)
 
-    def timeit(self, function: Callable) -> Callable:
+    def time(self, message: str) -> None:
         """
-        Decorator to measure and log the execution time of a function.
+        Log a message at the custom TIME level.
 
         Args:
-            function: The function to time.
+            message: The message to log.
+        """
+        self._logger.log("TIME", message)
+
+    def data(self, message: str) -> None:
+        """
+        Log a message at the custom DATA level.
+
+        Args:
+            message: The message to log.
+        """
+        self._logger.log("DATA", message)
+
+    def timeit(self, function: Optional[Callable] = None):
+        """
+        Decorator or context manager to measure and log the execution time of a function or code block.
+
+        Args:
+            function: The function to time (if used as a decorator).
 
         Returns:
-            The wrapper function that logs execution time.
+            The wrapper function that logs execution time (if used as a decorator),
+            or the context manager (if used with a with statement).
         """
+        if function is not None:
+            # Used as a decorator
+            def wrapper(*args: Tuple[Any], **kwargs: Dict[str, Any]) -> Any:
+                self._logger.trace(f"Entering function {function.__name__}.")
+                start_time = time()
+                result = function(*args, **kwargs)
+                end_time = time()
+                elapsed_time = end_time - start_time
+                self._logger.log("TIME", f"Function {function.__name__} ran for {elapsed_time:.4f} seconds.")
+                self._logger.trace(f"Exiting function {function.__name__}.")
+                return result
 
-        def wrapper(*args: Tuple[Any], **kwargs: Dict[str, Any]) -> Any:
-            self._logger.trace(f"Entering function {function.__name__}.")
-            start_time = time()
-            result = function(*args, **kwargs)
-            end_time = time()
-            elapsed_time = end_time - start_time
-            self._logger.log("TIME", f"Function {function.__name__} ran for {elapsed_time:.4f} seconds.")
-            self._logger.trace(f"Exiting function {function.__name__}.")
-            return result
+            return wrapper
+        else:
+            # Used as a context manager
+            class TimerContextManager:
+                def __init__(self, logger_instance):
+                    self.logger_instance = logger_instance
 
-        return wrapper
+                def __enter__(self):
+                    self.start_time = time()
+                    return self
+
+                def __exit__(self, exc_type, exc_val, exc_tb):
+                    end_time = time()
+                    elapsed_time = end_time - self.start_time
+                    self.logger_instance.log("TIME", f"Code block ran for {elapsed_time:.4f} seconds.")
+
+            return TimerContextManager(self)
 
     def log_table(
         self,
