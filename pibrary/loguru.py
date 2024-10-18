@@ -12,7 +12,9 @@ class LoguruPro:
         """
         Set up custom log levels.
         """
-        self._logger.level("Time", no=42, icon="⌛", color="<magenta>")
+        # Custom log levels
+        self._logger.level("TIME", no=8, icon="⌛", color="<magenta>")
+        self._logger.level("DATA", no=100, icon="📦", color="<cyan>")
 
     def __getattr__(self, name: str) -> Callable:
         """
@@ -39,15 +41,13 @@ class LoguruPro:
         """
 
         def wrapper(*args: Tuple[Any], **kwargs: Dict[str, Any]) -> Any:
-            self._logger.info(f"Entering function {function.__name__}.")
+            self._logger.trace(f"Entering function {function.__name__}.")
             start_time = time()
             result = function(*args, **kwargs)
             end_time = time()
             elapsed_time = end_time - start_time
-            self._logger.log(
-                "Time", f"Function {function.__name__} ran for {elapsed_time:.4f} seconds."
-            )
-            self._logger.info(f"Exiting function {function.__name__}.")
+            self._logger.log("TIME", f"Function {function.__name__} ran for {elapsed_time:.4f} seconds.")
+            self._logger.trace(f"Exiting function {function.__name__}.")
             return result
 
         return wrapper
@@ -70,10 +70,6 @@ class LoguruPro:
             row_separator: Custom separator string for rows.
             column_separator: Custom separator string for columns.
         """
-        if not data:
-            self._logger.info("Table of Results:\n(No data provided)")
-            return
-
         # If headers are not provided, create default headers
         num_columns = max(len(row) for row in data)
         headers = headers or [f"Column {i+1}" for i in range(num_columns)]
@@ -115,7 +111,7 @@ class LoguruPro:
             ]
         )
 
-        self._logger.info("Table of Results:\n{}", table)
+        self._logger.log("DATA", f"Table of Results:\n{table}")
 
 
 logger = LoguruPro()
