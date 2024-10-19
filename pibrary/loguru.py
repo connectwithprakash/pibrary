@@ -1,10 +1,75 @@
+"""
+LoguruPro: Enhanced Loguru Logger
+
+This module provides an enhanced wrapper for the Loguru logger with additional features.
+
+Usage:
+    from pibrary.loguru import logger
+
+The `logger` object is a pre-instantiated LoguruPro instance, ready to use.
+
+Features:
+    - Custom log levels: TIME and DATA
+    - Execution time measurement
+    - Tabular data logging
+
+Example:
+    from pibrary.loguru import logger
+
+    # Logging at custom levels
+    logger.time("This is a time log")
+    logger.data("This is a data log")
+
+    # Using timeit as a decorator
+    @logger.timeit
+    def my_function():
+        # Your code here
+        pass
+
+    # Using timeit as a context manager
+    with logger.timeit():
+        # Your code block here
+        pass
+
+    # Logging a table
+    data = [
+        ["Alice", "25", "Engineer"],
+        ["Bob", "30", "Designer"],
+        ["Charlie", "35", "Manager"]
+    ]
+    headers = ["Name", "Age", "Profession"]
+    logger.log_table(data, headers=headers)
+"""
+
 import inspect
 import sys
 
 from time import time
+
 from typing import Any, Callable, Dict, List, Optional, Tuple
 from functools import wraps
 from loguru import logger as loguru_logger
+
+
+def format_elapsed_time(seconds: float) -> str:
+    """Format elapsed time into hours, minutes, and seconds."""
+    hours, remainder = divmod(seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+
+    parts = []
+    if hours > 0:
+        parts.append(f"{int(hours)}h")
+    if minutes > 0 or hours > 0:
+        parts.append(f"{int(minutes)}m")
+
+    if seconds >= 1:
+        parts.append(f"{seconds:.2f}s")
+    elif seconds >= 0.001:
+        parts.append(f"{seconds*1000:.2f}ms")
+    else:
+        parts.append(f"{seconds*1000000:.2f}µs")
+
+    return " ".join(parts)
 
 
 class TimerContextManager:
@@ -33,18 +98,17 @@ class TimerContextManager:
     def __exit__(self, exc_type: Optional[type], exc_val: Optional[BaseException], exc_tb: Optional[Any]) -> None:
         """Log the elapsed time when exiting the context."""
         elapsed_time = time() - self.start_time
-        self.logger.opt(depth=1).log("TIME", f"Code block ran in {elapsed_time:.4f} seconds.")
+        elapsed_time_str = format_elapsed_time(elapsed_time)
+
+        self.logger.opt(depth=1).log("TIME", f"Code block executed in {elapsed_time_str}.")
 
 
 class LoguruPro:
     """
     Enhanced wrapper for Loguru logger with additional features.
 
-    Methods:
-        time(message: str): Log a message at the custom TIME level.
-        data(message: str): Log a message at the custom DATA level.
-        timeit(function: Optional[Callable] = None): Decorator or context manager for measuring execution time.
-        log_table(data: List[List[str]], headers: Optional[List[str]] = None, ...): Log tabular data as a table.
+    Note: This class is not intended to be instantiated directly.
+    Use the pre-instantiated `logger` object from this module.
     """
 
     def __init__(self) -> None:
@@ -75,8 +139,10 @@ class LoguruPro:
 
         Args:
             message (str): The message to log.
+
+        Usage:
+            logger.time("Operation completed")
         """
-        # frame = inspect.currentframe().f_back
         self.logger.opt(depth=1).log("TIME", message)
 
     def data(self, message: str) -> None:
@@ -85,6 +151,9 @@ class LoguruPro:
 
         Args:
             message (str): The message to log.
+
+        Usage:
+            logger.data("Data processing result: 42")
         """
         self.logger.opt(depth=1).log("DATA", message)
 
@@ -97,6 +166,17 @@ class LoguruPro:
 
         Returns:
             Callable: The wrapped function with timing or a context manager.
+
+        Usage as a decorator:
+            @logger.timeit
+            def my_function():
+                # Your code here
+                pass
+
+        Usage as a context manager:
+            with logger.timeit():
+                # Your code block here
+                pass
         """
         if function:
 
@@ -106,7 +186,7 @@ class LoguruPro:
                 start_time = time()
                 result = function(*args, **kwargs)
                 elapsed_time = time() - start_time
-                self.logger.opt(depth=1).log("TIME", f"{function.__name__} ran in {elapsed_time:.4f} seconds.")
+                self.logger.opt(depth=1).log("TIME", f"{function.__name__} ran in {format_elapsed_time(elapsed_time)}.")
                 self.logger.trace(f"Exiting {function.__name__}.")
                 return result
 
@@ -131,6 +211,15 @@ class LoguruPro:
             alignments (Optional[List[str]]): Alignment for each column ("left", "center", "right").
             row_separator (str): The string used to separate rows. Default is '-+-'.
             column_separator (str): The string used to separate columns. Default is ' | '.
+
+        Usage:
+            data = [
+                ["Alice", "25", "Engineer"],
+                ["Bob", "30", "Designer"],
+                ["Charlie", "35", "Manager"]
+            ]
+            headers = ["Name", "Age", "Profession"]
+            logger.log_table(data, headers=headers)
         """
         num_columns = max(len(row) for row in data)
         headers = headers or [f"Column {i + 1}" for i in range(num_columns)]
@@ -156,3 +245,5 @@ class LoguruPro:
 
 # Instantiate the logger
 logger = LoguruPro()
+
+__all__ = ["logger"]
