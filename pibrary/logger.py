@@ -3,7 +3,7 @@ from .loguru import logger as loguru_pro
 
 # Optional: Warn users about the new module
 warnings.warn(
-    "The 'logger.py' module is deprecated and will be removed in a future version. Please update your imports to use 'loguru.py'.",
+    "The 'logger' module is deprecated and will be removed in a future version. Please update your imports to use 'pibrary.loguru'.",
     DeprecationWarning,
     stacklevel=2,
 )
