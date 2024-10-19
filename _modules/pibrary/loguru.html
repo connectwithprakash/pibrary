@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pibrary.loguru &mdash; Pibrary 0.3.2 documentation</title>
+  <title>pibrary.loguru &mdash; Pibrary 0.3.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
-      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=71d9d8e6"></script>
-        <script src="../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=d5a15cff"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -72,148 +70,258 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pibrary.loguru</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">LoguruPro: Enhanced Loguru Logger</span>
+
+<span class="sd">This module provides an enhanced wrapper for the Loguru logger with additional features.</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">    from pibrary.loguru import logger</span>
+
+<span class="sd">The `logger` object is a pre-instantiated LoguruPro instance, ready to use.</span>
+
+<span class="sd">Features:</span>
+<span class="sd">    - Custom log levels: TIME and DATA</span>
+<span class="sd">    - Execution time measurement</span>
+<span class="sd">    - Tabular data logging</span>
+
+<span class="sd">Example:</span>
+<span class="sd">    from pibrary.loguru import logger</span>
+
+<span class="sd">    # Logging at custom levels</span>
+<span class="sd">    logger.time(&quot;This is a time log&quot;)</span>
+<span class="sd">    logger.data(&quot;This is a data log&quot;)</span>
+
+<span class="sd">    # Using timeit as a decorator</span>
+<span class="sd">    @logger.timeit</span>
+<span class="sd">    def my_function():</span>
+<span class="sd">        # Your code here</span>
+<span class="sd">        pass</span>
+
+<span class="sd">    # Using timeit as a context manager</span>
+<span class="sd">    with logger.timeit():</span>
+<span class="sd">        # Your code block here</span>
+<span class="sd">        pass</span>
+
+<span class="sd">    # Logging a table</span>
+<span class="sd">    data = [</span>
+<span class="sd">        [&quot;Alice&quot;, &quot;25&quot;, &quot;Engineer&quot;],</span>
+<span class="sd">        [&quot;Bob&quot;, &quot;30&quot;, &quot;Designer&quot;],</span>
+<span class="sd">        [&quot;Charlie&quot;, &quot;35&quot;, &quot;Manager&quot;]</span>
+<span class="sd">    ]</span>
+<span class="sd">    headers = [&quot;Name&quot;, &quot;Age&quot;, &quot;Profession&quot;]</span>
+<span class="sd">    logger.log_table(data, headers=headers)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
 <span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span> <span class="k">as</span> <span class="n">loguru_logger</span>
 
 
-<div class="viewcode-block" id="LoguruPro">
-<a class="viewcode-back" href="../../autoapi/pibrary/loguru/index.html#pibrary.loguru.LoguruPro">[docs]</a>
-<span class="k">class</span> <span class="nc">LoguruPro</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<div class="viewcode-block" id="LoguruPro._logger">
-<a class="viewcode-back" href="../../autoapi/pibrary/loguru/index.html#pibrary.loguru.LoguruPro._logger">[docs]</a>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="n">loguru_logger</span></div>
+<span class="k">def</span> <span class="nf">format_elapsed_time</span><span class="p">(</span><span class="n">seconds</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format elapsed time into hours, minutes, and seconds.&quot;&quot;&quot;</span>
+    <span class="n">hours</span><span class="p">,</span> <span class="n">remainder</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">seconds</span><span class="p">,</span> <span class="mi">3600</span><span class="p">)</span>
+    <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">remainder</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
 
+    <span class="n">parts</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">hours</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">hours</span><span class="p">)</span><span class="si">}</span><span class="s2">h&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">minutes</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">hours</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">minutes</span><span class="p">)</span><span class="si">}</span><span class="s2">m&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">seconds</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">seconds</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">seconds</span> <span class="o">&gt;=</span> <span class="mf">0.001</span><span class="p">:</span>
+        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">seconds</span><span class="o">*</span><span class="mi">1000</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">ms&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">seconds</span><span class="o">*</span><span class="mi">1000000</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">µs&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">TimerContextManager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Context manager to measure and log the execution time of code blocks.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        logger (loguru_logger): Instance of the Loguru logger for logging.</span>
+<span class="sd">        start_time (float): The time when the context was entered.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">loguru_logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the TimerContextManager with a Loguru logger.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            logger (loguru_logger): The logger instance used for logging execution time.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;TimerContextManager&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Record the start time when entering the context.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">type</span><span class="p">],</span> <span class="n">exc_val</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">BaseException</span><span class="p">],</span> <span class="n">exc_tb</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Log the elapsed time when exiting the context.&quot;&quot;&quot;</span>
+        <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span>
+        <span class="n">elapsed_time_str</span> <span class="o">=</span> <span class="n">format_elapsed_time</span><span class="p">(</span><span class="n">elapsed_time</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">opt</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;TIME&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Code block executed in </span><span class="si">{</span><span class="n">elapsed_time_str</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">LoguruPro</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Enhanced wrapper for Loguru logger with additional features.</span>
+
+<span class="sd">    Note: This class is not intended to be instantiated directly.</span>
+<span class="sd">    Use the pre-instantiated `logger` object from this module.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize LoguruPro with custom log levels.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">loguru_logger</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_setup_custom_levels</span><span class="p">()</span>
 
-<div class="viewcode-block" id="LoguruPro._setup_custom_levels">
-<a class="viewcode-back" href="../../autoapi/pibrary/loguru/index.html#pibrary.loguru.LoguruPro._setup_custom_levels">[docs]</a>
     <span class="k">def</span> <span class="nf">_setup_custom_levels</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set up custom log levels.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">level</span><span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="n">no</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;⌛&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;&lt;magenta&gt;&quot;</span><span class="p">)</span></div>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Define custom log levels for TIME and DATA.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">level</span><span class="p">(</span><span class="s2">&quot;TIME&quot;</span><span class="p">,</span> <span class="n">no</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;⏱️&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;&lt;bold&gt;&lt;magenta&gt;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">level</span><span class="p">(</span><span class="s2">&quot;DATA&quot;</span><span class="p">,</span> <span class="n">no</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;📊&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;&lt;bold&gt;&lt;cyan&gt;&quot;</span><span class="p">)</span>
 
-
-<div class="viewcode-block" id="LoguruPro.__getattr__">
-<a class="viewcode-back" href="../../autoapi/pibrary/loguru/index.html#pibrary.loguru.LoguruPro.__getattr__">[docs]</a>
     <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delegate attribute access to the wrapped Loguru logger object.</span>
-<span class="sd">        Allows access to all Loguru logger methods.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            name: The attribute or method name.</span>
+<span class="sd">            name (str): The attribute or method name to access.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            The attribute or method from the Loguru logger.</span>
+<span class="sd">            Callable: The corresponding attribute or method from the Loguru logger.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
-
-<div class="viewcode-block" id="LoguruPro.timeit">
-<a class="viewcode-back" href="../../autoapi/pibrary/loguru/index.html#pibrary.loguru.LoguruPro.timeit">[docs]</a>
-    <span class="k">def</span> <span class="nf">timeit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Decorator to measure and log the execution time of a function.</span>
+<span class="sd">        Log a message at the custom TIME level.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            function: The function to time.</span>
+<span class="sd">            message (str): The message to log.</span>
+
+<span class="sd">        Usage:</span>
+<span class="sd">            logger.time(&quot;Operation completed&quot;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">opt</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;TIME&quot;</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Log a message at the custom DATA level.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            message (str): The message to log.</span>
+
+<span class="sd">        Usage:</span>
+<span class="sd">            logger.data(&quot;Data processing result: 42&quot;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">opt</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;DATA&quot;</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">timeit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Decorator or context manager for logging execution time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            function (Optional[Callable]): The function to time if used as a decorator.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            The wrapper function that logs execution time.</span>
+<span class="sd">            Callable: The wrapped function with timing or a context manager.</span>
+
+<span class="sd">        Usage as a decorator:</span>
+<span class="sd">            @logger.timeit</span>
+<span class="sd">            def my_function():</span>
+<span class="sd">                # Your code here</span>
+<span class="sd">                pass</span>
+
+<span class="sd">        Usage as a context manager:</span>
+<span class="sd">            with logger.timeit():</span>
+<span class="sd">                # Your code block here</span>
+<span class="sd">                pass</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">function</span><span class="p">:</span>
 
-        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Entering function </span><span class="si">{</span><span class="n">function</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
-            <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-            <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-            <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span>
-                <span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Function </span><span class="si">{</span><span class="n">function</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> ran for </span><span class="si">{</span><span class="n">elapsed_time</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> seconds.&quot;</span>
-            <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Exiting function </span><span class="si">{</span><span class="n">function</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">result</span>
+            <span class="nd">@wraps</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
+            <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Entering </span><span class="si">{</span><span class="n">function</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+                <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">opt</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;TIME&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">function</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> ran in </span><span class="si">{</span><span class="n">format_elapsed_time</span><span class="p">(</span><span class="n">elapsed_time</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Exiting </span><span class="si">{</span><span class="n">function</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">result</span>
 
-        <span class="k">return</span> <span class="n">wrapper</span></div>
+            <span class="k">return</span> <span class="n">wrapper</span>
 
+        <span class="k">return</span> <span class="n">TimerContextManager</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
 
-<div class="viewcode-block" id="LoguruPro.log_table">
-<a class="viewcode-back" href="../../autoapi/pibrary/loguru/index.html#pibrary.loguru.LoguruPro.log_table">[docs]</a>
     <span class="k">def</span> <span class="nf">log_table</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">headers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">alignments</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">headers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">alignments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">row_separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;-+-&quot;</span><span class="p">,</span>
         <span class="n">column_separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot; | &quot;</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Logs a given list of data as a formatted table.</span>
+<span class="sd">        Log a list of data as a formatted table.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            data: List of rows, where each row is a list of values.</span>
-<span class="sd">            headers: Optional headers for the table columns.</span>
-<span class="sd">            alignments: Optional list of alignments for each column (&quot;left&quot;, &quot;center&quot;, &quot;right&quot;).</span>
-<span class="sd">            row_separator: Custom separator string for rows.</span>
-<span class="sd">            column_separator: Custom separator string for columns.</span>
+<span class="sd">            data (List[List[str]]): The rows of the table, where each row is a list of string values.</span>
+<span class="sd">            headers (Optional[List[str]]): The headers for the table columns.</span>
+<span class="sd">            alignments (Optional[List[str]]): Alignment for each column (&quot;left&quot;, &quot;center&quot;, &quot;right&quot;).</span>
+<span class="sd">            row_separator (str): The string used to separate rows. Default is &#39;-+-&#39;.</span>
+<span class="sd">            column_separator (str): The string used to separate columns. Default is &#39; | &#39;.</span>
+
+<span class="sd">        Usage:</span>
+<span class="sd">            data = [</span>
+<span class="sd">                [&quot;Alice&quot;, &quot;25&quot;, &quot;Engineer&quot;],</span>
+<span class="sd">                [&quot;Bob&quot;, &quot;30&quot;, &quot;Designer&quot;],</span>
+<span class="sd">                [&quot;Charlie&quot;, &quot;35&quot;, &quot;Manager&quot;]</span>
+<span class="sd">            ]</span>
+<span class="sd">            headers = [&quot;Name&quot;, &quot;Age&quot;, &quot;Profession&quot;]</span>
+<span class="sd">            logger.log_table(data, headers=headers)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Table of Results:</span><span class="se">\n</span><span class="s2">(No data provided)&quot;</span><span class="p">)</span>
-            <span class="k">return</span>
-
-        <span class="c1"># If headers are not provided, create default headers</span>
         <span class="n">num_columns</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">data</span><span class="p">)</span>
-        <span class="n">headers</span> <span class="o">=</span> <span class="n">headers</span> <span class="ow">or</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Column </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_columns</span><span class="p">)]</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="n">headers</span> <span class="ow">or</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Column </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_columns</span><span class="p">)]</span>
+        <span class="n">alignments</span> <span class="o">=</span> <span class="p">(</span><span class="n">alignments</span> <span class="ow">or</span> <span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_columns</span><span class="p">)[:</span><span class="n">num_columns</span><span class="p">]</span>
 
-        <span class="c1"># Ensure the headers match the number of columns</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">headers</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">num_columns</span><span class="p">:</span>
-            <span class="n">headers</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;Column </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">headers</span><span class="p">),</span> <span class="n">num_columns</span><span class="p">)])</span>
-
-        <span class="c1"># Ensure alignments match the number of columns, or default to &#39;left&#39;</span>
-        <span class="k">if</span> <span class="n">alignments</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">alignments</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_columns</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">alignments</span> <span class="o">=</span> <span class="p">(</span><span class="n">alignments</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_columns</span><span class="p">)[:</span><span class="n">num_columns</span><span class="p">]</span>
-
-        <span class="c1"># Calculate column widths based on the maximum length of data in each column</span>
+        <span class="c1"># Calculate the maximum width for each column</span>
         <span class="n">col_widths</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">))</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">col</span><span class="p">)</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">headers</span><span class="p">,</span> <span class="o">*</span><span class="n">data</span><span class="p">)]</span>
 
-        <span class="k">def</span> <span class="nf">format_cell</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">alignment</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">alignment</span> <span class="o">==</span> <span class="s2">&quot;left&quot;</span><span class="p">:</span>
-                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s2">&lt;</span><span class="si">{</span><span class="n">width</span><span class="si">}}</span><span class="s2">&quot;</span>
-            <span class="k">elif</span> <span class="n">alignment</span> <span class="o">==</span> <span class="s2">&quot;center&quot;</span><span class="p">:</span>
-                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s2">^</span><span class="si">{</span><span class="n">width</span><span class="si">}}</span><span class="s2">&quot;</span>
-            <span class="k">elif</span> <span class="n">alignment</span> <span class="o">==</span> <span class="s2">&quot;right&quot;</span><span class="p">:</span>
-                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s2">&gt;</span><span class="si">{</span><span class="n">width</span><span class="si">}}</span><span class="s2">&quot;</span>
-            <span class="k">return</span> <span class="n">value</span>
+        <span class="k">def</span> <span class="nf">format_cell</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">align</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Format a cell based on the specified alignment.&quot;&quot;&quot;</span>
+            <span class="n">align_map</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;left&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="s2">&quot;center&quot;</span><span class="p">:</span> <span class="s2">&quot;^&quot;</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">:</span> <span class="s2">&quot;&gt;&quot;</span><span class="p">}</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">value</span><span class="si">:{</span><span class="n">align_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">align</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&lt;&#39;</span><span class="p">)</span><span class="si">}{</span><span class="n">width</span><span class="si">}}</span><span class="s2">&quot;</span>
 
-        <span class="k">def</span> <span class="nf">format_row</span><span class="p">(</span><span class="n">row</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">is_header</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">column_separator</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                <span class="n">format_cell</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">),</span> <span class="n">col_widths</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">alignments</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
-            <span class="p">)</span>
+        <span class="k">def</span> <span class="nf">format_row</span><span class="p">(</span><span class="n">row</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Format a row with the specified column separator.&quot;&quot;&quot;</span>
+            <span class="k">return</span> <span class="n">column_separator</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">format_cell</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">col_widths</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">alignments</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">))</span>
 
         <span class="n">separator_row</span> <span class="o">=</span> <span class="n">row_separator</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="n">width</span> <span class="k">for</span> <span class="n">width</span> <span class="ow">in</span> <span class="n">col_widths</span><span class="p">)</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">format_row</span><span class="p">(</span><span class="n">headers</span><span class="p">),</span> <span class="n">separator_row</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">format_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">data</span><span class="p">])</span>
 
-        <span class="n">table</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="p">[</span>
-                <span class="n">format_row</span><span class="p">(</span><span class="n">headers</span><span class="p">,</span> <span class="n">is_header</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-                <span class="n">separator_row</span><span class="p">,</span>
-                <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">format_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">data</span><span class="p">),</span>
-            <span class="p">]</span>
-        <span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Table of Results:</span><span class="se">\n</span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">table</span><span class="p">)</span></div>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;DATA&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Table of Results:</span><span class="se">\n</span><span class="si">{</span><span class="n">table</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 
-
+<span class="c1"># Instantiate the logger</span>
 <div class="viewcode-block" id="logger">
 <a class="viewcode-back" href="../../autoapi/pibrary/loguru/index.html#pibrary.loguru.logger">[docs]</a>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">LoguruPro</span><span class="p">()</span></div>
 
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;logger&quot;</span><span class="p">]</span>
 </pre></div>
 
            </div>
