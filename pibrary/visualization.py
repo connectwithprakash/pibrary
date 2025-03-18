@@ -2,9 +2,8 @@ from typing import List, Union, Optional
 import numpy as np
 import matplotlib.pyplot as plt
 
-def plot_images(images: List[Union[str, np.ndarray]],
-                title: Optional[str] = "",
-                figsize: tuple = (20, 20)) -> None:
+
+def plot_images(images: List[Union[str, np.ndarray]], title: Optional[str] = "", figsize: tuple = (20, 20)) -> None:
     """
     Plot a grid of images.
 
@@ -30,11 +29,12 @@ def plot_images(images: List[Union[str, np.ndarray]],
         if isinstance(img, str):
             img = plt.imread(img)
         axes[i].imshow(img)
-        axes[i].axis('off')
+        axes[i].axis("off")
 
     # Set the title
     fig.suptitle(title)
     plt.show()
+
 
 # Example usage:
 # images = ["image1.jpg", "image2.jpg", "image3.jpg"]
