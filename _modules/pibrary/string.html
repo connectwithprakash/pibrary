@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pibrary.string &mdash; Pibrary 0.3.3 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
@@ -70,13 +70,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pibrary.string</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">string</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">UserString</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">string</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">UserString</span>
 
 
 <div class="viewcode-block" id="String">
 <a class="viewcode-back" href="../../autoapi/pibrary/string/index.html#pibrary.string.String">[docs]</a>
-<span class="k">class</span> <span class="nc">String</span><span class="p">(</span><span class="n">UserString</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">String</span><span class="p">(</span><span class="n">UserString</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This class is used to preprocess a text.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -84,7 +84,7 @@
     <span class="nd">@property</span>
 <div class="viewcode-block" id="String.str">
 <a class="viewcode-back" href="../../autoapi/pibrary/string/index.html#pibrary.string.String.str">[docs]</a>
-    <span class="k">def</span> <span class="nf">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Property to get the string of the text.</span>
 
 <span class="sd">        Returns:</span>
@@ -95,7 +95,7 @@
 
 <div class="viewcode-block" id="String.remove_punctuation_except_period">
 <a class="viewcode-back" href="../../autoapi/pibrary/string/index.html#pibrary.string.String.remove_punctuation_except_period">[docs]</a>
-    <span class="k">def</span> <span class="nf">remove_punctuation_except_period</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UserString</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_punctuation_except_period</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UserString</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove punctuation except period from a text.</span>
 
@@ -109,7 +109,7 @@
 
 <div class="viewcode-block" id="String.remove_punctuation">
 <a class="viewcode-back" href="../../autoapi/pibrary/string/index.html#pibrary.string.String.remove_punctuation">[docs]</a>
-    <span class="k">def</span> <span class="nf">remove_punctuation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UserString</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_punctuation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UserString</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove punctuation from a text.</span>
 
 <span class="sd">        Returns:</span>
@@ -120,7 +120,7 @@
 
 <div class="viewcode-block" id="String.remove_digits">
 <a class="viewcode-back" href="../../autoapi/pibrary/string/index.html#pibrary.string.String.remove_digits">[docs]</a>
-    <span class="k">def</span> <span class="nf">remove_digits</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UserString</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_digits</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UserString</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This function is used to remove digits from a text.</span>
 
@@ -132,7 +132,7 @@
 
 <div class="viewcode-block" id="String.remove_duplicate_spaces">
 <a class="viewcode-back" href="../../autoapi/pibrary/string/index.html#pibrary.string.String.remove_duplicate_spaces">[docs]</a>
-    <span class="k">def</span> <span class="nf">remove_duplicate_spaces</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UserString</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_duplicate_spaces</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UserString</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove duplicate spaces from a text.</span>
 
 <span class="sd">        Returns:</span>

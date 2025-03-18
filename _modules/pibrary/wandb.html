@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pibrary.wandb &mdash; Pibrary 0.3.3 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
@@ -70,85 +70,88 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pibrary.wandb</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span>
 
-<span class="kn">import</span> <span class="nn">wandb</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">wandb</span>
+
 
 <div class="viewcode-block" id="WandB">
 <a class="viewcode-back" href="../../autoapi/pibrary/wandb/index.html#pibrary.wandb.WandB">[docs]</a>
-<span class="k">class</span> <span class="nc">WandB</span><span class="p">:</span>
-	<span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span>
-			<span class="n">job_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-			<span class="nb">dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-			<span class="n">config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-			<span class="n">project</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-			<span class="n">entity</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-			<span class="n">reinit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-			<span class="n">tags</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-			<span class="n">group</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-			<span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-			<span class="n">notes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-			<span class="n">magic</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-			<span class="n">config_exclude_keys</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-			<span class="n">config_include_keys</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-			<span class="n">anonymous</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-			<span class="n">mode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-			<span class="n">allow_val_change</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-			<span class="n">resume</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-			<span class="n">force</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-			<span class="n">tensorboard</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-			<span class="n">sync_tensorboard</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-			<span class="n">monitor_gym</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-			<span class="n">save_code</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-			<span class="nb">id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-			<span class="n">settings</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-			<span class="p">):</span>
-		
-		<span class="k">return</span> <span class="n">wandb</span><span class="o">.</span><span class="n">init</span><span class="p">(</span>
-			<span class="n">job_type</span><span class="o">=</span><span class="n">job_type</span><span class="p">,</span>
-			<span class="nb">dir</span><span class="o">=</span><span class="nb">dir</span><span class="p">,</span>
-			<span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
-			<span class="n">project</span><span class="o">=</span><span class="n">project</span><span class="p">,</span>
-			<span class="n">entity</span><span class="o">=</span><span class="n">entity</span><span class="p">,</span>
-			<span class="n">reinit</span><span class="o">=</span><span class="n">reinit</span><span class="p">,</span>
-			<span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">,</span>
-			<span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">,</span>
-			<span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
-			<span class="n">notes</span><span class="o">=</span><span class="n">notes</span><span class="p">,</span>
-			<span class="n">magic</span><span class="o">=</span><span class="n">magic</span><span class="p">,</span>
-			<span class="n">config_exclude_keys</span><span class="o">=</span><span class="n">config_exclude_keys</span><span class="p">,</span>
-			<span class="n">config_include_keys</span><span class="o">=</span><span class="n">config_include_keys</span><span class="p">,</span>
-			<span class="n">anonymous</span><span class="o">=</span><span class="n">anonymous</span><span class="p">,</span>
-			<span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span>
-			<span class="n">allow_val_change</span><span class="o">=</span><span class="n">allow_val_change</span><span class="p">,</span>
-			<span class="n">resume</span><span class="o">=</span><span class="n">resume</span><span class="p">,</span>
-			<span class="n">force</span><span class="o">=</span><span class="n">force</span><span class="p">,</span>
-			<span class="n">tensorboard</span><span class="o">=</span><span class="n">tensorboard</span><span class="p">,</span>
-			<span class="n">sync_tensorboard</span><span class="o">=</span><span class="n">sync_tensorboard</span><span class="p">,</span>
-			<span class="n">monitor_gym</span><span class="o">=</span><span class="n">monitor_gym</span><span class="p">,</span>
-			<span class="n">save_code</span><span class="o">=</span><span class="n">save_code</span><span class="p">,</span>
-			<span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span>
-			<span class="n">settings</span><span class="o">=</span><span class="n">settings</span>
-		<span class="p">)</span></div>
+<span class="k">class</span><span class="w"> </span><span class="nc">WandB</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__new__</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">job_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="nb">dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">project</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">entity</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">reinit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">tags</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">group</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">notes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">magic</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">config_exclude_keys</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">config_include_keys</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">anonymous</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">mode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">allow_val_change</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">resume</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">force</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">tensorboard</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sync_tensorboard</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">monitor_gym</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">save_code</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="nb">id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">settings</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+
+        <span class="k">return</span> <span class="n">wandb</span><span class="o">.</span><span class="n">init</span><span class="p">(</span>
+            <span class="n">job_type</span><span class="o">=</span><span class="n">job_type</span><span class="p">,</span>
+            <span class="nb">dir</span><span class="o">=</span><span class="nb">dir</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">project</span><span class="o">=</span><span class="n">project</span><span class="p">,</span>
+            <span class="n">entity</span><span class="o">=</span><span class="n">entity</span><span class="p">,</span>
+            <span class="n">reinit</span><span class="o">=</span><span class="n">reinit</span><span class="p">,</span>
+            <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">,</span>
+            <span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">notes</span><span class="o">=</span><span class="n">notes</span><span class="p">,</span>
+            <span class="n">magic</span><span class="o">=</span><span class="n">magic</span><span class="p">,</span>
+            <span class="n">config_exclude_keys</span><span class="o">=</span><span class="n">config_exclude_keys</span><span class="p">,</span>
+            <span class="n">config_include_keys</span><span class="o">=</span><span class="n">config_include_keys</span><span class="p">,</span>
+            <span class="n">anonymous</span><span class="o">=</span><span class="n">anonymous</span><span class="p">,</span>
+            <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span>
+            <span class="n">allow_val_change</span><span class="o">=</span><span class="n">allow_val_change</span><span class="p">,</span>
+            <span class="n">resume</span><span class="o">=</span><span class="n">resume</span><span class="p">,</span>
+            <span class="n">force</span><span class="o">=</span><span class="n">force</span><span class="p">,</span>
+            <span class="n">tensorboard</span><span class="o">=</span><span class="n">tensorboard</span><span class="p">,</span>
+            <span class="n">sync_tensorboard</span><span class="o">=</span><span class="n">sync_tensorboard</span><span class="p">,</span>
+            <span class="n">monitor_gym</span><span class="o">=</span><span class="n">monitor_gym</span><span class="p">,</span>
+            <span class="n">save_code</span><span class="o">=</span><span class="n">save_code</span><span class="p">,</span>
+            <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span>
+            <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-	<span class="c1"># Example usage:</span>
-	<span class="c1"># wandb.init(project=&quot;my-project&quot;, entity=&quot;my-entity&quot;, name=&quot;my-run&quot;)</span>
+    <span class="c1"># Example usage:</span>
+    <span class="c1"># wandb.init(project=&quot;my-project&quot;, entity=&quot;my-entity&quot;, name=&quot;my-run&quot;)</span>
 <div class="viewcode-block" id="run">
 <a class="viewcode-back" href="../../autoapi/pibrary/wandb/index.html#pibrary.wandb.run">[docs]</a>
-	<span class="n">run</span> <span class="o">=</span> <span class="n">WandB</span><span class="p">(</span><span class="n">project</span><span class="o">=</span><span class="s2">&quot;my-project&quot;</span><span class="p">,</span>
-			  <span class="n">entity</span><span class="o">=</span><span class="s2">&quot;connectwithprakash&quot;</span><span class="p">,</span>
-			<span class="nb">dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span>
-			    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;my-run&quot;</span><span class="p">,</span>
-				<span class="n">mode</span><span class="o">=</span><span class="s2">&quot;offiline&quot;</span><span class="p">,</span>
-				<span class="p">)</span></div>
+    <span class="n">run</span> <span class="o">=</span> <span class="n">WandB</span><span class="p">(</span>
+        <span class="n">project</span><span class="o">=</span><span class="s2">&quot;my-project&quot;</span><span class="p">,</span>
+        <span class="n">entity</span><span class="o">=</span><span class="s2">&quot;connectwithprakash&quot;</span><span class="p">,</span>
+        <span class="nb">dir</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;my-run&quot;</span><span class="p">,</span>
+        <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;offiline&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
 
-	<span class="n">run</span><span class="o">.</span><span class="n">log</span><span class="p">({</span><span class="s2">&quot;accuracy&quot;</span><span class="p">:</span> <span class="mf">0.9</span><span class="p">})</span>
-	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Run URL:&quot;</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
-	<span class="nb">print</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">job_type</span><span class="p">)</span>
-	<span class="n">run</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+    <span class="n">run</span><span class="o">.</span><span class="n">log</span><span class="p">({</span><span class="s2">&quot;accuracy&quot;</span><span class="p">:</span> <span class="mf">0.9</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Run URL:&quot;</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">job_type</span><span class="p">)</span>
+    <span class="n">run</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
 </pre></div>
 
            </div>

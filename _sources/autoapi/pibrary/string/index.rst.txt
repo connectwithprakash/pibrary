@@ -26,6 +26,7 @@ Module Contents
    .. py:property:: str
       :type: str
 
+
       Property to get the string of the text.
 
       :returns: String of the text.
